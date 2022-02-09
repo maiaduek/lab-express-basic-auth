@@ -93,14 +93,36 @@ router.post('/login', (req, res) => {
       return console.log("INCORRECT PASSWORD")
     }
 
-    // if username and passwords match
-    console.log(req)
-    console.log(req.session)
+    // if username and passwords 
     req.session.user = foundUser;
-
-    console.log(req.session.user)
-    res.render('profile', {user: foundUser})
+    res.redirect('/main')
+    // console.log(req.session.user)
+    // res.render('profile', {user: foundUser})
   })
+})
+
+
+router.get('/main', (req, res) => {
+  if (req.session?.user?.username) {
+    console.log("req.session user ******", req.session.user)
+    // res.render('profile', req.session.user)
+    res.render('profile', req.session.user)
+  } else {
+    res.render('login')
+  }
+})
+
+router.get('/private', (req,res) => {
+  if (req.session?.user?.username) {
+    res.render('private-pg', req.session.user)
+  } else {
+    res.render('login')
+  }
+})
+
+router.get('/logout', (req, res) => {
+  req.session.destroy()
+  res.render('logout')
 })
 
 module.exports = router;
